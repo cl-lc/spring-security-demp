@@ -1,0 +1,29 @@
+Step 1:
+POST http://localhost:9527/login
+{
+	"username":"admin",
+    "password": "admin"
+}
+
+>>> get "token"
+
+
+Step 2:
+Get http://localhost:9527/a
+
+>>> get "User not login"
+
+
+Step 3:
+Get http://localhost:9527/a
+with header token:${TOKEN}
+
+>>> get "This is a"
+
+
+Step 4:
+Get http://localhost:9527/b
+with header token:${TOKEN}
+
+>>> get "Access denied"
+

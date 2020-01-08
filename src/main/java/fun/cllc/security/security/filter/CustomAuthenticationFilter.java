@@ -1,6 +1,6 @@
 package fun.cllc.security.security.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,14 +22,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        ObjectMapper mapper = new ObjectMapper();
         UsernamePasswordAuthenticationToken authRequest;
         try (InputStream is = request.getInputStream()) {
-            AuthenticationBean authenticationBean = mapper.readValue(is, AuthenticationBean.class);
-            authRequest = new UsernamePasswordAuthenticationToken(authenticationBean.getUsername(),
-                    authenticationBean.getPassword());
+            AuthenticationBean bean = JSONObject.parseObject(is, AuthenticationBean.class);
+            authRequest = new UsernamePasswordAuthenticationToken(bean.getUsername(), bean.getPassword());
         } catch (IOException e) {
-            e.printStackTrace();
             authRequest = new UsernamePasswordAuthenticationToken("", "");
         }
         setDetails(request, authRequest);
